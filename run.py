@@ -14,6 +14,7 @@ DEBUG_MODE = False  # Debug模式，是否打印请求返回信息
 # PROXY = input('请输入代理，如不需要直接回车:')  # 代理，如果多次出现IP问题可尝试将自己所用的魔法设置为代理。例如：使用clash则设置为 'http://127.0.0.1:7890'
 PROXY = ''
 INVITE_CODE = os.getenv('INVITE_CODE') or input('请输入邀请码: ')
+AUTO_MODE = os.getenv('AUTO_MODE', 'True')
 
 
 # 检查变量
@@ -596,10 +597,10 @@ async def activation_code(access_token, captcha, xid, in_code):
             raise error
 
 
-async def main():
+async def do_auto_invite(invite_code: str):
     try:
         check_env()
-        incode = INVITE_CODE
+        incode = invite_code
         start_time = time.time()
         xid = str(uuid.uuid4()).replace("-", "")
         mail = await get_mail()
@@ -644,4 +645,18 @@ async def main():
         # await main()
 
 
-asyncio.run(main())
+async def main():
+    if AUTO_MODE == 'False':
+        code = INVITE_CODE
+        await do_auto_invite(code)
+        return
+    codes = INVITE_CODE
+    codes = codes.split(",")
+    for code in codes:
+        await do_auto_invite(c)
+        print(f"finish for invite code: {code}")
+        await asyncio.sleep(60)
+
+
+if __name__ == '__main__':
+    asyncio.run(main())
