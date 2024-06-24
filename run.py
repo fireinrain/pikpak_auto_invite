@@ -653,7 +653,7 @@ async def main():
     codes = INVITE_CODE
     codes = codes.split(",")
     for code in codes:
-        await do_auto_invite(c)
+        await do_auto_invite(code)
         print(f"finish for invite code: {code}")
         await asyncio.sleep(60)
 
